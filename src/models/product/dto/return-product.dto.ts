@@ -1,7 +1,6 @@
 // return-product.dto.ts
 
 export class ReturnProductDto {
-  id: number;
   name: string;
   description: string;
   brand: string;

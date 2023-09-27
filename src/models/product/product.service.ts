@@ -113,11 +113,14 @@ export class ProductService {
   }
 
   private mapToReturnDto(product: Product): ReturnProductDto {
-    // Mapeie uma instância de produto para o DTO de retorno
     const returnDto = new ReturnProductDto();
-    returnDto.id = product.id;
     returnDto.name = product.name;
-    // Mapeie outras propriedades conforme necessário
+    returnDto.brand = product.brand;
+    returnDto.description = product.description;
+    returnDto.price = product.price;
+    returnDto.unitOfMeasure = product.unit;
+    returnDto.currentStock = product.stock;
+    returnDto.supplier = product.supplier;
     return returnDto;
   }
 }
