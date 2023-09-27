@@ -1,4 +1,5 @@
-import { IsString, IsNumber, IsNotEmpty, IsDecimal } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsString, IsInt, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
@@ -15,14 +16,15 @@ export class CreateProductDto {
 
   @IsString()
   @IsNotEmpty()
-  unitOfMeasure: string;
+  unit: string;
+
+  @IsInt()
+  @IsNotEmpty()
+  stock: number;
 
   @IsNumber()
   @IsNotEmpty()
-  currentStock: number;
-
-  @IsDecimal({ decimal_digits: '2' })
-  @IsNotEmpty()
+  @Transform(({ value }) => parseFloat(value))
   price: number;
 
   @IsString()
