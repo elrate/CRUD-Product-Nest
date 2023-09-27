@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -13,6 +18,21 @@ export class ProductService {
   ) {}
 
   async createProduct(createProductDto: CreateProductDto): Promise<Product> {
+    // Verifique se já existe um produto com base em algumas colunas iguais
+    const existingProduct = await this.productRepository.findOne({
+      where: {
+        name: createProductDto.name, // Verifique a coluna 'name' (ou outra que você desejar)
+        brand: createProductDto.brand, // Verifique a coluna 'brand' (ou outra que você desejar)
+      },
+    });
+    if (existingProduct) {
+      // Se um produto com valores semelhantes já existe, lance uma exceção ou retorne uma mensagem de erro
+      throw new HttpException(
+        'Produto com valores semelhantes já existe.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    // Se não existir um produto com valores semelhantes, crie o novo produto
     const newProduct = this.productRepository.create(createProductDto);
     return await this.productRepository.save(newProduct);
   }
