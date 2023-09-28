@@ -4,8 +4,8 @@ export class ReturnProductDto {
   name: string;
   description: string;
   brand: string;
-  unitOfMeasure: string;
-  currentStock: number;
+  unit: string;
+  stock: number;
   price: number;
   supplier: string;
 }

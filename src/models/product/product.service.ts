@@ -71,13 +71,17 @@ export class ProductService {
     id: number,
     updateProductDto: CreateProductDto,
   ): Promise<Product> {
-    const product = await this.findProductById(id);
+    const product = await this.productRepository.findOne({ where: { id } });
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
     const errors = await validate(updateProductDto);
 
     if (errors.length > 0) {
       // Se houver erros de validação, lance uma exceção com detalhes
       throw new HttpException(errors, HttpStatus.BAD_REQUEST);
     }
+
     // Verifique se o nome ou a marca do produto estão sendo atualizados
     if (
       updateProductDto.name !== product.name ||
@@ -100,7 +104,10 @@ export class ProductService {
       }
     }
 
+    // Atualize os campos do produto existente com os valores do DTO
+    updateProductDto.price = Math.floor(updateProductDto.price * 100) / 100;
     Object.assign(product, updateProductDto);
+    // Salve o produto atualizado no banco de dados
     return await this.productRepository.save(product);
   }
 
@@ -118,8 +125,8 @@ export class ProductService {
     returnDto.brand = product.brand;
     returnDto.description = product.description;
     returnDto.price = product.price;
-    returnDto.unitOfMeasure = product.unit;
-    returnDto.currentStock = product.stock;
+    returnDto.unit = product.unit;
+    returnDto.stock = product.stock;
     returnDto.supplier = product.supplier;
     return returnDto;
   }
