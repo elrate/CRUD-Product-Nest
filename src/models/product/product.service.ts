@@ -130,6 +130,28 @@ export class ProductService {
     }
   }
 
+  async updateStock(id: number, quantitySold: number): Promise<void> {
+    // Verifique se o produto com o ID fornecido existe
+    const product = await this.productRepository.findOne({ where: { id } });
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+
+    // Verifique se há estoque disponível suficiente para a quantidade vendida
+    if (product.stock < quantitySold) {
+      throw new HttpException(
+        'Insufficient stock for this quantity sold',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    // Atualize o estoque do produto
+    product.stock -= quantitySold;
+
+    // Salve o produto atualizado no banco de dados
+    await this.productRepository.save(product);
+  }
+
   private mapToReturnDto(product: Product): ReturnProductDto {
     const returnDto = new ReturnProductDto();
     returnDto.name = product.name;
