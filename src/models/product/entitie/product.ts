@@ -1,10 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'product' })
 export class Product {
@@ -32,9 +26,9 @@ export class Product {
   @Column({ name: 'supplier', nullable: false }) // Adicione o fornecedor
   supplier: string;
 
-  @CreateDateColumn({ name: 'created_at', readonly: true })
-  createdAt: Date;
+  @Column({ name: 'created_at', type: 'varchar', nullable: false })
+  createdAt: string;
 
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  @Column({ name: 'updated_at', type: 'varchar', nullable: false })
+  updatedAt: string;
 }

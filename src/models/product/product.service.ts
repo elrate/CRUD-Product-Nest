@@ -10,7 +10,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { Product } from './entitie/product';
 import { ReturnProductDto } from './dto/return-product.dto';
 import { validate } from 'class-validator';
-
+import { format } from 'date-fns';
 @Injectable()
 export class ProductService {
   constructor(
@@ -43,10 +43,16 @@ export class ProductService {
     // Trunque o valor do campo price para duas casas decimais
     const truncatedPrice = Math.floor(createProductDto.price * 100) / 100;
 
+    // Formate a data de criação para o formato "DD/MM/YYYY"
+    const createdAt = format(new Date(), 'dd/MM/yyyy - HH:mm:ss');
+    const updatedAt = format(new Date(), 'dd/MM/yyyy - HH:mm:ss');
+
     // Crie o objeto Product com o preço truncado
     const newProduct = this.productRepository.create({
       ...createProductDto,
       price: truncatedPrice,
+      createdAt,
+      updatedAt,
     });
     return await this.productRepository.save(newProduct);
   }
@@ -106,7 +112,12 @@ export class ProductService {
 
     // Atualize os campos do produto existente com os valores do DTO
     updateProductDto.price = Math.floor(updateProductDto.price * 100) / 100;
+
     Object.assign(product, updateProductDto);
+
+    // Formate a data de atualização para o formato "DD/MM/YYYY"
+    const updatedAt = format(new Date(), 'dd/MM/yyyy - HH:mm:ss');
+    product.updatedAt = updatedAt;
     // Salve o produto atualizado no banco de dados
     return await this.productRepository.save(product);
   }

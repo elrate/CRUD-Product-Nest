@@ -52,14 +52,14 @@ export class CreateProductTable1695734465981 implements MigrationInterface {
           },
           {
             name: 'created_at',
-            type: 'timestamp',
-            default: 'now()',
+            type: 'varchar', // Alterado para varchar
+            default: 'strftime("%d/%m/%Y %H:%M:%S", "now")', // Valor padrão formatado
             isNullable: false,
           },
           {
             name: 'updated_at',
-            type: 'timestamp',
-            default: 'now()',
+            type: 'varchar', // Alterado para varchar
+            default: 'strftime("%d/%m/%Y %H:%M:%S", "now")', // Valor padrão formatado
             isNullable: false,
           },
         ],
